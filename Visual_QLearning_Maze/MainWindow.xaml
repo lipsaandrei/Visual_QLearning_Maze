@@ -1,12 +1,60 @@
 ﻿<Window x:Class="Visual_QLearning_Maze.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Visual_QLearning_Maze"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        xmlns:lvc="http://livecharts.com/wpf"
+        Title="Visual Q-Learning Maze" Height="600" Width="800"
+        MinHeight="600" MinWidth="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" VerticalAlignment="Top" Margin="5">
+                <Button Content="Wall" Width="120" Margin="5" Click="WallButton_Click"/>
+                <Button Content="Start" Width="120" Margin="5" Click="StartButton_Click"/>
+                <Button Content="Goal" Width="120" Margin="5" Click="GoalButton_Click"/>
+                <Button Content="Clear" Width="120" Margin="5" Click="ClearButton_Click"/>
+            </StackPanel>
+
+            <Canvas Name="MazeCanvas" Background="White" Width="400" Height="400" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    MouseLeftButtonDown="MazeCanvas_MouseLeftButtonDown"/>
+
+            <StackPanel Grid.Column="2" VerticalAlignment="Top" Margin="5">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Alpha:" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox Name="AlphaBox" Width="50" Text="0,1" Margin="5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Gamma:" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox Name="GammaBox" Width="50" Text="0,9" Margin="5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Epsilon:" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox Name="EpsilonBox" Width="50" Text="0,2" Margin="5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Episodes:" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox Name="EpisodesBox" Width="50" Text="5000" Margin="5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Delay(ms):" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox Name="DelayBox" Width="50" Text="200" Margin="5"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Train" Width="80" Margin="5" Click="TrainButton_Click"/>
+            <Button Content="Run" Width="80" Margin="5" Click="RunButton_Click"/>
+        </StackPanel>
 
     </Grid>
 </Window>
