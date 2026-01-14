@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -32,6 +33,10 @@ namespace Visual_QLearning_Maze
         private QLearningAgent agent;
         private Simulator simulator;
 
+        private CancellationTokenSource trainingCancel;
+
+        private bool isTraining = false;
+        private TrainingWindow currentTrainingWindow;
 
         public MainWindow()
         {
@@ -209,6 +214,83 @@ namespace Visual_QLearning_Maze
 
                 if (env.IsGoal())
                     break;
+            }
+        }
+
+        // INCOMPLET
+        // antrenare vizuala a agentului cu grafic de performanta
+        private async void TrainVisualButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isTraining)
+                return;
+
+            isTraining = true;
+
+            int episodes = 5000;
+            int delay = 50;
+            if (env == null)
+            {
+                env = new MazeEnvironment(maze);
+                agent = new QLearningAgent(rows * cols, 4);
+
+                if (double.TryParse(AlphaBox.Text, out double alpha)) agent.Alpha = alpha;
+                if (double.TryParse(GammaBox.Text, out double gamma)) agent.Gamma = gamma;
+                if (double.TryParse(EpsilonBox.Text, out double epsilon)) agent.Epsilon = epsilon;
+                if (int.TryParse(EpisodesBox.Text, out int ep)) episodes = ep;
+                if (int.TryParse(DelayBox.Text, out int d)) delay = d;
+            }
+
+            trainingCancel = new CancellationTokenSource();
+            var token = trainingCancel.Token;
+
+            //var qAgent = new QLearningAgent(rows * cols, 4);
+
+            // creeaza fereastra de training
+            currentTrainingWindow = new TrainingWindow(episodes);
+            currentTrainingWindow.WindowClosed += () =>
+            {
+                trainingCancel.Cancel();
+            };
+            currentTrainingWindow.Show();
+            try
+            {
+                for (int i = 0; i < episodes; i++)
+                {
+                    if (token.IsCancellationRequested)
+                        break;
+
+                    env.Reset();
+                    double totalReward = 0;
+
+                    env.Reset();
+
+                    //while (!env.IsGoal())
+                    //{
+                    //    int state = env.GetState();
+                    //    int action = qAgent.ChooseAction(state);
+                    //    double reward = env.Step(action, out int nextState);
+                    //    totalReward += reward;
+
+                    //    DrawMaze();
+                    //    await Task.Delay(delay);
+                    //}
+
+                    var win = currentTrainingWindow;
+
+                    if (win != null && win.IsLoaded && !token.IsCancellationRequested)
+                    {
+                        win.Dispatcher.Invoke(() =>
+                        {
+                            if (win.IsLoaded)
+                                win.UpdateChart(totalReward, episodes);
+                        });
+                    }
+                }
+            }
+            finally
+            {
+                isTraining = false;
+                currentTrainingWindow = null;
             }
         }
 
