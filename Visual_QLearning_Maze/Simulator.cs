@@ -19,6 +19,7 @@ namespace Visual_QLearning_Maze
             Agent = agent;
         }
 
+        // ruleaza un episod de invatare
         public double RunEpisode()
         {
             Env.Reset();

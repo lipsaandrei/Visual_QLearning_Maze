@@ -61,6 +61,7 @@ namespace Visual_QLearning_Maze
                     maxNext = Q[nextState, a];
             }
 
+            // formula de update
             Q[state, action] =
                 Q[state, action] +
                 Alpha * (reward + Gamma * maxNext - Q[state, action]);

@@ -27,6 +27,7 @@ namespace Visual_QLearning_Maze
             Height = maze.GetLength(0);
             Width = maze.GetLength(1);
 
+            // se cauta pozitia de start
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)

@@ -55,6 +55,7 @@ namespace Visual_QLearning_Maze
             DrawMaze();
         }
 
+        //seteaza modul de desenare pereti/start/goal
         private void WallButton_Click(object sender, RoutedEventArgs e)
         {
             currentMode = DrawMode.Wall;
@@ -70,6 +71,7 @@ namespace Visual_QLearning_Maze
             currentMode = DrawMode.Goal;
         }
 
+        //sterge peretii
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             maze = new int[rows, cols];
@@ -85,7 +87,7 @@ namespace Visual_QLearning_Maze
             DrawMaze();
         }
 
-
+        // desenare maze
         private void DrawMaze()
         {
             MazeCanvas.Children.Clear();
@@ -118,6 +120,7 @@ namespace Visual_QLearning_Maze
                 DrawAgent();
         }
 
+        // desenare agent
         void DrawAgent()
         {
             Ellipse e = new Ellipse();
@@ -131,10 +134,11 @@ namespace Visual_QLearning_Maze
             MazeCanvas.Children.Add(e);
         }
 
-
+        // modificare matrice
         private void MazeCanvas_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var point = e.GetPosition(MazeCanvas);
+            // calculeaza celula
             int x = (int)(point.X / cellSize);
             int y = (int)(point.Y / cellSize);
 
@@ -144,11 +148,13 @@ namespace Visual_QLearning_Maze
             switch (currentMode)
             {
                 case DrawMode.Wall:
-                    if ((x == startX && y == startY) || (x == goalX && y == goalY))
+                    if ((x == startX && y == startY) || (x == goalX && y == goalY)) // nu pune perete peste start/goal
                         return;
                     maze[y, x] = 1; // perete
                     break;
                 case DrawMode.Start:
+                    if (x == goalX && y == goalY) // nu pune start peste goal
+                        return;
                     maze[startY, startX] = 0; // sterge start vechi
                     startX = x;
                     startY = y;
@@ -156,6 +162,8 @@ namespace Visual_QLearning_Maze
                     break;
 
                 case DrawMode.Goal:
+                    if (x == startX && y == startY) // nu pune goal peste start
+                        return;
                     maze[goalY, goalX] = 0; // sterge goal vechi
                     goalX = x;
                     goalY = y;
@@ -166,6 +174,7 @@ namespace Visual_QLearning_Maze
             DrawMaze();
         }
 
+        // antrenare agent
         private void TrainButton_Click(object sender, RoutedEventArgs e)
         {
             env = new MazeEnvironment(maze);
@@ -190,6 +199,7 @@ namespace Visual_QLearning_Maze
             MessageBox.Show("Training complet!");
         }
 
+        // rulare agent antrenat
         private async void RunButton_Click(object sender, RoutedEventArgs e)
         {
             if (env == null)
